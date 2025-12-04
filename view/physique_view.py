@@ -21,9 +21,7 @@ class PymunkSimulationWidget(QWidget):
     def init_simulation(self):
         self.space = pymunk.Space()
         self.space.gravity = (0, -900)
-        handler = self.space.add_collision
 
-        # --- SOL -------------------------------------------------
         ground_y = 50
         ground = pymunk.Segment(
             self.space.static_body,
@@ -36,7 +34,6 @@ class PymunkSimulationWidget(QWidget):
         ground.collision_type = 2
         self.space.add(ground)
 
-        # --- BOULE -----------------------------------------------
         mass = 5
         self.radius = 20
         moment = pymunk.moment_for_circle(mass, 0, self.radius)
@@ -48,59 +45,43 @@ class PymunkSimulationWidget(QWidget):
         shape.collision_type = 1
         self.space.add(self.body, shape)
 
-
+        self.space.on_collision(1,2, begin = self.on_ball_hit_ground)
 
     def update_simulation(self):
         dt = 1 / 60
 
         v = Vec2d(self.body.velocity.x, self.body.velocity.y)
         speed = v.length
-
-        # ---------- Résistance de l'air (optionnel, mais aide à stabiliser) ----------
-        if speed > 0:
-            k_drag = 0.01  # à ajuster
-            drag_force = -k_drag * speed * v
-            self.body.apply_force_at_local_point(drag_force, (0, 0))
-
-        # ---------- Effet Magnus (rotation -> force latérale) ----------
-        spin = self.body.angular_velocity  # >0 ou <0 selon le sens
+        spin = self.body.angular_velocity
         if speed > 0 and spin != 0:
-            k_mag = 1  # coefficient de Magnus (augmente pour voir mieux l’effet)
+            k_mag = 1
 
-            # vecteur perpendiculaire à la vitesse (90°)
-            # si v = (vx, vy), un vecteur perpendiculaire = (-vy, vx)
-            magnus_dir = Vec2d(-v.y, v.x).normalized()  # direction latérale
+            magnus_dir = Vec2d(-v.y, v.x).normalized()
             magnus_force = k_mag * abs(spin) * speed * magnus_dir
 
-            # changer le signe pour inverser le côté où ça courbe
             if spin < 0:
                 magnus_force = -magnus_force
 
             self.body.apply_force_at_local_point(magnus_force, (0, 0))
 
-        # ---------- Step physique ----------
         self.space.step(dt)
         self.update()
 
     # ------------------ SOURIS ------------------
     def mousePressEvent(self, event):
-            # on "reset" un peu la balle pour éviter les vitesses accumulées
             self.body.position = (100, 200)
             self.body.velocity = (0, 0)
             self.body.angular_velocity = 0
             self.body.angle = 0
 
-            # impulsion vers la droite et vers le haut -> parabole
-            impulse = (2000, 2000)  # tu peux ajuster la puissance
+            impulse = (2000, 2000)
 
-            # on applique l'impulsion un peu au-dessus du centre
-            # => ça crée un moment de rotation (spin)
             self.body.apply_impulse_at_local_point(impulse, (0, -self.radius))
 
     def on_ball_hit_ground(self, arbiter, space, data):
      body = self.body
      print("Touché au sol à:", body.position.x, body.position.y)
-     return True
+
 
     # ------------------ DESSIN ------------------
     def paintEvent(self, event):

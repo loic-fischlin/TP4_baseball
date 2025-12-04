@@ -2,7 +2,7 @@ import sys
 
 from PyQt6.QtWidgets import QApplication
 
-from view.view import PymunkSimulationWidget
+from view.physique_view import PymunkSimulationWidget
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
