@@ -3,9 +3,10 @@ import sys
 from PyQt6.QtWidgets import QApplication
 
 from view.physique_view import PymunkSimulationWidget
+from view.view import MainWindow
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = PymunkSimulationWidget()
+    window = MainWindow()
     window.show()
     sys.exit(app.exec())
