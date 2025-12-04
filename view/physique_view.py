@@ -40,7 +40,7 @@ class PymunkSimulationWidget(QWidget):
         self.body = pymunk.Body(mass, moment)
         self.body.position = (200, 300)
         shape = pymunk.Circle(self.body, self.radius)
-        shape.elasticity = 0.8
+        shape.elasticity = 0
         shape.friction = 0.9
         shape.collision_type = 1
         self.space.add(self.body, shape)
@@ -67,14 +67,13 @@ class PymunkSimulationWidget(QWidget):
         self.space.step(dt)
         self.update()
 
-    # ------------------ SOURIS ------------------
     def mousePressEvent(self, event):
-            self.body.position = (100, 200)
+            self.body.position = (-100, -200)
             self.body.velocity = (0, 0)
             self.body.angular_velocity = 0
             self.body.angle = 0
 
-            impulse = (2000, 2000)
+            impulse = (-2000, 2000)
 
             self.body.apply_impulse_at_local_point(impulse, (0, -self.radius))
 
@@ -83,11 +82,9 @@ class PymunkSimulationWidget(QWidget):
      print("Touché au sol à:", body.position.x, body.position.y)
 
 
-    # ------------------ DESSIN ------------------
     def paintEvent(self, event):
         p = QPainter(self)
 
-        # --- Sol ---
         p.setBrush(Qt.GlobalColor.gray)
         p.drawRect(
             0,
@@ -96,27 +93,20 @@ class PymunkSimulationWidget(QWidget):
             50
         )
 
-        # --- Balle avec rotation ---
         p.save()
 
-        # centre de la balle en coordonnées Qt
         cx = self.body.position.x
-        cy = self.H - self.body.position.y  # inversion Y pour Qt
+        cy = self.H - self.body.position.y
 
-        # on place le repère au centre de la balle
         p.translate(cx, cy)
 
-        # Pymunk: angle en radians, on convertit en degrés
         angle_deg = -self.body.angle * 180.0 / math.pi
         p.rotate(angle_deg)
 
-        # on dessine le disque centré en (0,0)
         p.setBrush(Qt.GlobalColor.red)
         p.drawEllipse(-self.radius, -self.radius, 2 * self.radius, 2 * self.radius)
 
-        # petit point pour voir la rotation
         p.setBrush(Qt.GlobalColor.white)
-        # un point sur le bord droit de la balle
         p.drawEllipse(self.radius - 5, -5, 10, 10)
 
         p.restore()
