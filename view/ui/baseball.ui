@@ -95,6 +95,11 @@
       <property name="title">
        <string>Graph</string>
       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_4">
+       <item>
+        <layout class="QVBoxLayout" name="grpaheLayout"/>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>

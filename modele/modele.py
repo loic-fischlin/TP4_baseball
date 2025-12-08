@@ -13,3 +13,11 @@ class Modele():
     @spin.setter
     def spin(self, value):
         self._spin = value
+
+    @property
+    def speed(self):
+        return self._speed
+
+    @speed.setter
+    def speed(self, value):
+        self._speed = value
