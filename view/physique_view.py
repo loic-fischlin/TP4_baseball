@@ -60,7 +60,7 @@ class PymunkSimulationWidget(QWidget):
         moment = pymunk.moment_for_circle(mass, 0, self.radius)
 
         self.ball = pymunk.Body(mass, moment)
-        self.ball.position = (-1000, -1000)
+        self.ball.position = (300, 300)
         pitch_shape = pymunk.Circle(self.ball, self.radius)
         pitch_shape.elasticity = 1
         pitch_shape.friction = 1
@@ -96,6 +96,7 @@ class PymunkSimulationWidget(QWidget):
 
         if self.batte.position.x > 300 or self.batte.position.y > 300:
             self.batte.position = (-1000, -1000)
+            self.batte.velocity = (0,0)
         elif  self.batte.velocity.x < 0:
             self.reset_batte = True
 
@@ -103,6 +104,10 @@ class PymunkSimulationWidget(QWidget):
 
         self.space.step(dt)
         self.update()
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_T:
+            self.lancer(10,10)
 
     def mousePressEvent(self, event):
         if event.button() != Qt.MouseButton.LeftButton:
@@ -143,10 +148,6 @@ class PymunkSimulationWidget(QWidget):
 
         self.drag_start = None
         self.drag_end = None
-        self.drag_spawn_world = None
-
-
-
 
     def lancer(self, speed, spin):
         self.batte.position = (-1000, -1000)
@@ -154,7 +155,7 @@ class PymunkSimulationWidget(QWidget):
         self.ball.velocity = (0, 0)
         self.ball.angular_velocity = 0
         self.ball.angle = 0
-        angle = 25
+        angle = 0.43
 
         velocity_x = speed* math.cos(angle)
         velocity_y = speed*math.sin(angle)
@@ -186,10 +187,12 @@ class PymunkSimulationWidget(QWidget):
             p.rotate(angle_deg)
 
             if body is self.ball:
-                p.drawPixmap( -self.radius, -self.radius, 2 * self.radius, 2 * self.radius, self.ball_image)
+                p.setBrush(Qt.GlobalColor.blue)
+                p.drawEllipse(-self.radius, -self.radius, 2 * self.radius, 2 * self.radius)
 
             else:
                 p.setBrush(Qt.GlobalColor.darkYellow)
                 p.drawEllipse(-self.radius, -self.radius, 2 * self.radius, 2 * self.radius)
 
             p.restore()
+
