@@ -1,11 +1,15 @@
 import math
 import time
+from typing import TYPE_CHECKING
 
 import pymunk
 from PyQt6.QtCore import QTimer, Qt
 from PyQt6.QtGui import QPainter, QPixmap
 from PyQt6.QtWidgets import QWidget
 from pymunk import Vec2d
+
+if TYPE_CHECKING:
+    from controlleur.controlleur import MainController
 
 
 class PymunkSimulationWidget(QWidget):
@@ -15,6 +19,9 @@ class PymunkSimulationWidget(QWidget):
         self.setFixedSize(self.W, self.H)
         self.setFocus()
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+
+        if TYPE_CHECKING:
+            self.__controller: MainController | None = None
 
 
         self.timer = QTimer()
@@ -86,9 +93,12 @@ class PymunkSimulationWidget(QWidget):
 
             self.ball.apply_force_at_local_point(force, (0, 0))
 
-        if self.reset_batte:
+        if self.batte.position.x > 300 or self.batte.position.y > 300:
             self.batte.position = (-1000, -1000)
-            self.reset_batte = False
+        elif  self.batte.velocity.x < 0:
+            self.reset_batte = True
+
+
 
         self.space.step(dt)
         self.update()
@@ -135,21 +145,21 @@ class PymunkSimulationWidget(QWidget):
         self.drag_spawn_world = None
 
     def keyPressEvent(self, event):
-        if event.key() == Qt.Key.Key_P:
-            self.ball.position = (-1000, -1000)
-            self.batte.position = (-1000, -1000)
-            self.lancer()
+        if event.key() == Qt.Key.Key_T:
+            self.__controller.throw()
 
-    def lancer(self):
-            self.ball.position = (1050, 200)
-            self.ball.velocity = (0, 0)
-            self.ball.angular_velocity = 0
-            self.ball.angle = 0
 
-            impulse = (-4500, 2000)
+    def lancer(self, speed, spin):
+        self.batte.position = (-1000, -1000)
+        self.ball.position = (1050, 200)
+        self.ball.velocity = (0, 0)
+        self.ball.angular_velocity = 0
+        self.ball.angle = 0
+        angle = 25
 
-            self.ball.apply_impulse_at_local_point(impulse, (0, 0))
-            self.ball.angular_velocity = 100
+        self.batte.velocity.x = speed* math.cos(angle)
+        self.batte.velocity.y = speed*math.sin(angle)
+        self.ball.angular_velocity = spin
 
     def on_ball_hit_ground(self, arbiter, space, data):
      body = self.ball
@@ -161,8 +171,14 @@ class PymunkSimulationWidget(QWidget):
 
         p.drawPixmap(0, 0, self.W, self.H, self.background)
 
-        for body, color in ((self.ball, Qt.GlobalColor.red),
-                            (self.batte, Qt.GlobalColor.darkYellow)):
+        for body, color in (
+                (self.ball, Qt.GlobalColor.red),
+                (self.batte, Qt.GlobalColor.darkYellow)
+        ):
+            if body is self.batte and self.reset_batte:
+                self.reset_batte = False
+                continue
+
             p.save()
 
             cx = body.position.x
