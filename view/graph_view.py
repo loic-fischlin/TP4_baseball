@@ -7,7 +7,7 @@ if TYPE_CHECKING:
     from controlleur.controlleur import MainController
 
 
-class GrapheCanvas(FigureCanvasQTAgg):
+class GraphCanvas(FigureCanvasQTAgg):
     def __init__(self):
         self.fig, self.ax = plt.subplots(figsize=(10,10))
         super().__init__(self.fig)
