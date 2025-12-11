@@ -1,9 +1,3 @@
-from idlelib.debugobj_r import remote_object_tree_item
-
-from IPython.terminal.shortcuts.auto_suggest import resume_hinting
-
-import view
-from modele import modele
 from modele.modele import Modele
 from view.graph_view import GraphCanvas
 from view.physique_view import PymunkSimulationWidget
@@ -31,7 +25,8 @@ class MainController:
     def change_spin(self, value):
         self.__model.spin = value
 
-    def throw(self):
+    def throw_ball(self):
+        print("throw ball")
         self.__physique.lancer(self.__model.speed, self.__model.spin)
 
     def pause(self):
