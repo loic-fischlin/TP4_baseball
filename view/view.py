@@ -44,6 +44,10 @@ class MainWindow(QMainWindow):
         self.resume_button.clicked.connect(self.resume)
 
 
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_T:
+            self.throw()
+
     def speed_changed(self, value):
         self.__controller.change_speed(value)
 

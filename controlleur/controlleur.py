@@ -32,7 +32,7 @@ class MainController:
         self.__model.spin = value
 
     def throw(self):
-        self.__physique.lancer(self.__model.speed,self.__model.spin)
+        self.__physique.lancer(self.__model.speed, self.__model.spin)
 
     def pause(self):
         return

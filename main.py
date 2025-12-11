@@ -14,7 +14,7 @@ if __name__ == '__main__':
     physique = PymunkSimulationWidget()
     window = MainWindow()
     model = Modele()
-    controlleur = MainController(window, model, canvas, physique)
+    controlleur = MainController(window, model, physique, canvas)
     window.set_controller(controlleur)
     canvas.set_controller(controlleur)
     window.show()

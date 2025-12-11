@@ -29,6 +29,7 @@ class PymunkSimulationWidget(QWidget):
         self.timer.start(16)
 
         self.background = QPixmap("resources/background.png")
+        self.ball_image = QPixmap("resources/balle.png")
 
         self.dragging = False
         self.drag_start = None
@@ -144,9 +145,7 @@ class PymunkSimulationWidget(QWidget):
         self.drag_end = None
         self.drag_spawn_world = None
 
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key.Key_T:
-            self.__controller.throw()
+
 
 
     def lancer(self, speed, spin):
@@ -157,24 +156,22 @@ class PymunkSimulationWidget(QWidget):
         self.ball.angle = 0
         angle = 25
 
-        self.batte.velocity.x = speed* math.cos(angle)
-        self.batte.velocity.y = speed*math.sin(angle)
+        velocity_x = speed* math.cos(angle)
+        velocity_y = speed*math.sin(angle)
+        self.ball.velocity = (velocity_x, velocity_y)
         self.ball.angular_velocity = spin
 
     def on_ball_hit_ground(self, arbiter, space, data):
      body = self.ball
      print("Touché au sol à:", body.position.x, body.position.y)
 
-
     def paintEvent(self, event):
         p = QPainter(self)
 
         p.drawPixmap(0, 0, self.W, self.H, self.background)
 
-        for body, color in (
-                (self.ball, Qt.GlobalColor.red),
-                (self.batte, Qt.GlobalColor.darkYellow)
-        ):
+        for body in (self.ball, self.batte):
+
             if body is self.batte and self.reset_batte:
                 self.reset_batte = False
                 continue
@@ -183,16 +180,16 @@ class PymunkSimulationWidget(QWidget):
 
             cx = body.position.x
             cy = self.H - body.position.y
-
             p.translate(cx, cy)
 
             angle_deg = -body.angle * 180.0 / math.pi
             p.rotate(angle_deg)
 
-            p.setBrush(color)
-            p.drawEllipse(-self.radius, -self.radius, 2 * self.radius, 2 * self.radius)
+            if body is self.ball:
+                p.drawPixmap( -self.radius, -self.radius, 2 * self.radius, 2 * self.radius, self.ball_image)
 
-            p.setBrush(Qt.GlobalColor.white)
-            p.drawEllipse(self.radius - 5, -5, 10, 10)
+            else:
+                p.setBrush(Qt.GlobalColor.darkYellow)
+                p.drawEllipse(-self.radius, -self.radius, 2 * self.radius, 2 * self.radius)
 
             p.restore()
