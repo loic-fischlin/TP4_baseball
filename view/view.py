@@ -33,17 +33,34 @@ class MainWindow(QMainWindow):
         self.setFocus()
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
+        self.spinBox_spin.setRange(-150,150)
+        self.spinBox_speed.setRange(0,100)
+
+        #barre de contrôle
         self.spinBox_speed.valueChanged.connect(self.speed_changed)
+        self.spinBox_spin.valueChanged.connect(self.spin_changed)
+        self.throw_button.clicked.connect(self.throw)
+        self.pause_button.clicked.connect(self.pause)
+        self.resume_button.clicked.connect(self.resume)
 
 
     def speed_changed(self, value):
         self.__controller.change_speed(value)
 
+    def spin_changed(self, value):
+        self.__controller.change_spin(value)
+
+    def throw(self):
+        self.__controller.throw()
+
+    def pause(self):
+        self.__controller.pause()
+
+    def resume(self):
+        self.__controller.resume()
+
     def add_canvas(self, canvas):
         self.grapheLayout.addWidget(canvas)
-
-    # def add_physique(self, physique):
-    #     self.layout_jeu.addWidget(physique)
 
     def set_controller(self,controller):
         self.__controller = controller

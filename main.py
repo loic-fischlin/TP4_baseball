@@ -4,13 +4,13 @@ from PyQt6.QtWidgets import QApplication
 
 from controlleur.controlleur import MainController
 from modele.modele import Modele
-from view.graph_view import GrapheCanvas
+from view.graph_view import GraphCanvas
 from view.physique_view import PymunkSimulationWidget
 from view.view import MainWindow
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    canvas = GrapheCanvas()
+    canvas = GraphCanvas()
     physique = PymunkSimulationWidget()
     window = MainWindow()
     model = Modele()
