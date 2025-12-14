@@ -1,7 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QMainWindow, QHBoxLayout, QDoubleSpinBox, QPushButton, QVBoxLayout
+from PyQt6.QtWidgets import QMainWindow, QHBoxLayout, QDoubleSpinBox, QPushButton, QVBoxLayout, QMessageBox
 from PyQt6.uic import loadUi
 
 from view.graph_view import GraphCanvas
@@ -33,8 +33,8 @@ class MainWindow(QMainWindow):
         self.setFocus()
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
-        self.spinBox_spin.setRange(-150,150)
-        self.spinBox_speed.setRange(0,1000)
+        self.spinBox_spin.setRange(-20,20)
+        self.spinBox_speed.setRange(0,150)
 
         #barre de contrôle
         self.spinBox_speed.valueChanged.connect(self.speed_changed)

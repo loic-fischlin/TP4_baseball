@@ -15,7 +15,7 @@ if TYPE_CHECKING:
 class PymunkSimulationWidget(QWidget):
     def __init__(self):
         super().__init__()
-        self.W, self.H = 1280, 720
+        self.W, self.H = 896, 504
         self.setFixedSize(self.W, self.H)
         self.setFocus()
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
@@ -37,7 +37,6 @@ class PymunkSimulationWidget(QWidget):
         self.reset_batte = None
 
         self.init_simulation()
-        print("Widget créé :", id(self))
 
     def init_simulation(self):
         self.space = pymunk.Space()
@@ -94,7 +93,7 @@ class PymunkSimulationWidget(QWidget):
 
             self.ball.apply_force_at_local_point(force, (0, 0))
 
-        if self.batte.position.x > 300 or self.batte.position.y > 300:
+        if self.batte.position.x > 200 or self.batte.position.y > 200:
             self.batte.position = (-1000, -1000)
             self.batte.velocity = (0, 0)
         elif self.batte.velocity.x < 0:
@@ -145,16 +144,16 @@ class PymunkSimulationWidget(QWidget):
 
     def lancer(self, speed, spin):
         self.batte.position = (-1000, -1000)
-        self.ball.position = (1050, 200)
+        self.ball.position = (750, 200)
         self.ball.velocity = (0, 0)
         self.ball.angular_velocity = 0
         self.ball.angle = 0
         angle = -0.43
 
-        velocity_x = -speed * math.cos(angle)
-        velocity_y = -speed * math.sin(angle)
+        velocity_x = -speed*10 * math.cos(angle)
+        velocity_y = -speed*10 * math.sin(angle)
         self.ball.velocity = (velocity_x, velocity_y)
-        self.ball.angular_velocity = spin
+        self.ball.angular_velocity = spin*10
 
     def on_ball_hit_ground(self, arbiter, space, data):
         body = self.ball
