@@ -23,7 +23,6 @@ class PymunkSimulationWidget(QWidget):
         if TYPE_CHECKING:
             self.__controller: MainController | None = None
 
-
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_simulation)
         self.timer.start(16)
@@ -38,10 +37,11 @@ class PymunkSimulationWidget(QWidget):
         self.reset_batte = None
 
         self.init_simulation()
+        print("Widget créé :", id(self))
 
     def init_simulation(self):
         self.space = pymunk.Space()
-        self.space.gravity = (0, -900)
+        self.space.gravity = (0, -981)
 
         ground_y = 50
         ground = pymunk.Segment(
@@ -60,7 +60,7 @@ class PymunkSimulationWidget(QWidget):
         moment = pymunk.moment_for_circle(mass, 0, self.radius)
 
         self.ball = pymunk.Body(mass, moment)
-        self.ball.position = (300, 300)
+        self.ball.position = (-1000, -1000)
         pitch_shape = pymunk.Circle(self.ball, self.radius)
         pitch_shape.elasticity = 1
         pitch_shape.friction = 1
@@ -75,7 +75,7 @@ class PymunkSimulationWidget(QWidget):
         drag_shape.collision_type = 3
         self.space.add(self.batte, drag_shape)
 
-        self.space.on_collision(1,2, begin = self.on_ball_hit_ground)
+        self.space.on_collision(1, 2, begin=self.on_ball_hit_ground)
 
     def update_simulation(self):
         dt = 1 / 60
@@ -96,18 +96,12 @@ class PymunkSimulationWidget(QWidget):
 
         if self.batte.position.x > 300 or self.batte.position.y > 300:
             self.batte.position = (-1000, -1000)
-            self.batte.velocity = (0,0)
-        elif  self.batte.velocity.x < 0:
+            self.batte.velocity = (0, 0)
+        elif self.batte.velocity.x < 0:
             self.reset_batte = True
-
-
 
         self.space.step(dt)
         self.update()
-
-    def keyPressEvent(self, event):
-        if event.key() == Qt.Key.Key_T:
-            self.lancer(10,10)
 
     def mousePressEvent(self, event):
         if event.button() != Qt.MouseButton.LeftButton:
@@ -155,16 +149,16 @@ class PymunkSimulationWidget(QWidget):
         self.ball.velocity = (0, 0)
         self.ball.angular_velocity = 0
         self.ball.angle = 0
-        angle = 0.43
+        angle = -0.43
 
-        velocity_x = speed* math.cos(angle)
-        velocity_y = speed*math.sin(angle)
+        velocity_x = -speed * math.cos(angle)
+        velocity_y = -speed * math.sin(angle)
         self.ball.velocity = (velocity_x, velocity_y)
         self.ball.angular_velocity = spin
 
     def on_ball_hit_ground(self, arbiter, space, data):
-     body = self.ball
-     print("Touché au sol à:", body.position.x, body.position.y)
+        body = self.ball
+        print("Touché au sol à:", body.position.x, body.position.y)
 
     def paintEvent(self, event):
         p = QPainter(self)
@@ -187,14 +181,13 @@ class PymunkSimulationWidget(QWidget):
             p.rotate(angle_deg)
 
             if body is self.ball:
-                p.setBrush(Qt.GlobalColor.blue)
-                p.drawEllipse(-self.radius, -self.radius, 2 * self.radius, 2 * self.radius)
+                if body is self.ball:
+                    p.setClipRect(-self.radius, -self.radius, 2 * self.radius, 2 * self.radius)
+                    p.drawPixmap(-self.radius, -self.radius, 2 * self.radius, 2 * self.radius, self.ball_image)
 
             else:
                 p.setBrush(Qt.GlobalColor.darkYellow)
-                p.drawEllipse(-self.radius, -self.radius, 2 * self.radius, 2 * self.radius)
+                p.drawEllipse(-self.radius,-self.radius,2 * self.radius, 2 * self.radius
+                )
 
             p.restore()
-
-
-

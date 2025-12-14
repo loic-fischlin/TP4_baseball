@@ -20,21 +20,21 @@ class MainWindow(QMainWindow):
     pause_button : QPushButton
     resume_button : QPushButton
 
-    def __init__(self):
+    def __init__(self, physique: PymunkSimulationWidget):
         super().__init__()
         loadUi("view/ui/baseball.ui", self)
 
         if TYPE_CHECKING:
             self.__controller: MainController | None = None
 
-        self.jeu = PymunkSimulationWidget()
+        self.jeu = physique
         self.layout_jeu.addWidget(self.jeu)
 
         self.setFocus()
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
 
         self.spinBox_spin.setRange(-150,150)
-        self.spinBox_speed.setRange(0,100)
+        self.spinBox_speed.setRange(0,1000)
 
         #barre de contrôle
         self.spinBox_speed.valueChanged.connect(self.speed_changed)

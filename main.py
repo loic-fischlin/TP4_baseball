@@ -12,7 +12,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     canvas = GraphCanvas()
     physique = PymunkSimulationWidget()
-    window = MainWindow()
+    window = MainWindow(physique)
     model = Modele()
     controlleur = MainController(window, model, physique, canvas)
     window.set_controller(controlleur)
