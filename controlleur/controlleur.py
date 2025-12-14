@@ -30,9 +30,9 @@ class MainController:
         self.__physique.lancer(self.__model.speed, self.__model.spin)
 
     def pause(self):
-        return
+        self.__physique.pause()
 
     def resume(self):
-        return
+        self.__physique.resume()
 
 

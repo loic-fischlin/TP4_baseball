@@ -15,6 +15,7 @@ if TYPE_CHECKING:
 class PymunkSimulationWidget(QWidget):
     def __init__(self):
         super().__init__()
+        self.paused = False
         self.W, self.H = 896, 504
         self.setFixedSize(self.W, self.H)
         self.setFocus()
@@ -190,3 +191,14 @@ class PymunkSimulationWidget(QWidget):
                 )
 
             p.restore()
+
+    def pause(self):
+        if not self.paused:
+            self.timer.stop()
+            self.paused = True
+
+    def resume(self):
+        if self.paused:
+            self.timer.start(16)
+            self.paused = False
+
