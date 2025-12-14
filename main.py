@@ -18,5 +18,6 @@ if __name__ == '__main__':
     window.set_controller(controlleur)
     canvas.set_controller(controlleur)
     window.show()
+    window.box_information()
 
     sys.exit(app.exec())

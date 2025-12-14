@@ -46,8 +46,17 @@ class MainWindow(QMainWindow):
         canvas = GraphCanvas()
         self.grapheLayout.addWidget(canvas)
 
-
-
+    def box_information(self):
+        QMessageBox.information(
+            None,
+            "Information",
+            "Bienvenue dans la simulation de baseball et de l’effet Magnus !\n"
+            "Spin : vitesse angulaire (facteur ×10)\n"
+            "Speed : vitesse de la balle en pixels (facteur ×10)\n\n"
+            "Pour frapper la balle, il faut faire un clic gauche dans la partie en bas à gauche, "
+            "garder le bouton enfoncé, puis déplacer la souris. "
+            "Cela crée une balle dont la vitesse et la direction sont proportionnelles au déplacement de la souris."
+        )
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_T:
