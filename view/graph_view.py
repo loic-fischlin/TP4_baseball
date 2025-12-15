@@ -18,7 +18,7 @@ class GraphCanvas(FigureCanvasQTAgg):
         self.current_x = []
         self.current_y = []
 
-        self.__ax.set_xlim(-1000, 10000)
+        self.__ax.set_xlim(-100, 10000)
         self.__ax.set_ylim(0, 4000)
 
         self.current_line, = self.__ax.plot([], [], 'r-')
