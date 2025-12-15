@@ -72,7 +72,7 @@
        <item>
         <spacer name="horizontalSpacer">
          <property name="orientation">
-          <enum>Qt::Horizontal</enum>
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
          <property name="sizeHint" stdset="0">
           <size>
@@ -159,11 +159,29 @@
      <x>0</x>
      <y>0</y>
      <width>855</width>
-     <height>21</height>
+     <height>33</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuSmall_graph">
+    <property name="title">
+     <string>Graph size</string>
+    </property>
+    <addaction name="actionSmall"/>
+    <addaction name="actionBig"/>
+   </widget>
+   <addaction name="menuSmall_graph"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionSmall">
+   <property name="text">
+    <string>Small</string>
+   </property>
+  </action>
+  <action name="actionBig">
+   <property name="text">
+    <string>Big</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

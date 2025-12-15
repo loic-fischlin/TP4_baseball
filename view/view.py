@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING
 
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMainWindow, QHBoxLayout, QDoubleSpinBox, QPushButton, QVBoxLayout, QMessageBox
 from PyQt6.uic import loadUi
 
@@ -19,6 +20,8 @@ class MainWindow(QMainWindow):
     throw_button : QPushButton
     pause_button : QPushButton
     resume_button : QPushButton
+    actionSmall : QAction
+    actionBig : QAction
 
     def __init__(self, physique: PymunkSimulationWidget):
         super().__init__()
@@ -43,24 +46,37 @@ class MainWindow(QMainWindow):
         self.pause_button.clicked.connect(self.pause)
         self.resume_button.clicked.connect(self.resume)
 
-        canvas = GraphCanvas()
-        self.grapheLayout.addWidget(canvas)
+        self.actionSmall.triggered.connect(self.update_small_size)
+        self.actionBig.triggered.connect(self.update_big_size)
+
+
 
     def box_information(self):
         QMessageBox.information(
             None,
             "Information",
             "Bienvenue dans la simulation de baseball et de l’effet Magnus !\n"
-            "Spin : vitesse angulaire (facteur ×10)\n"
-            "Speed : vitesse de la balle en pixels (facteur ×10)\n\n"
+            "Spin : vitesse angulaire entre -20 et 20 (facteur ×10)\n"
+            "Speed : vitesse de la balle en pixels entre 0 et 150 (facteur ×10)\n\n"
             "Pour frapper la balle, il faut faire un clic gauche dans la partie en bas à gauche, "
             "garder le bouton enfoncé, puis déplacer la souris. "
             "Cela crée une balle dont la vitesse et la direction sont proportionnelles au déplacement de la souris."
+            " Pour changer la dimension du graphique, appuyez sur Graph size en haut à gauche de la page"
         )
+
+    def update_small_size(self):
+        self.__controller.shrink_graph()
+
+    def update_big_size(self):
+        self.__controller.expend_graph()
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key.Key_T:
             self.throw()
+        if event.key() == Qt.Key.Key_P:
+            self.pause()
+        if event.key() ==Qt.Key.Key_R:
+            self.resume()
 
     def speed_changed(self, value):
         self.__controller.change_speed(value)
@@ -82,6 +98,10 @@ class MainWindow(QMainWindow):
 
     def set_controller(self,controller):
         self.__controller = controller
+
+    def set_canvas(self, canvas):
+        self.grapheLayout.addWidget(canvas)
+
 
 
 

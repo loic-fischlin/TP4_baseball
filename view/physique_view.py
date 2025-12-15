@@ -3,16 +3,20 @@ import time
 from typing import TYPE_CHECKING
 
 import pymunk
-from PyQt6.QtCore import QTimer, Qt
+from PyQt6.QtCore import QTimer, Qt, pyqtSignal
 from PyQt6.QtGui import QPainter, QPixmap
 from PyQt6.QtWidgets import QWidget
+from PyQt6.QtGui import QColor
 from pymunk import Vec2d
+from sympy.physics.units import velocity
 
 if TYPE_CHECKING:
     from controlleur.controlleur import MainController
 
 
 class PymunkSimulationWidget(QWidget):
+    positionChanged = pyqtSignal(float, float)
+
     def __init__(self):
         super().__init__()
         self.paused = False
@@ -35,8 +39,7 @@ class PymunkSimulationWidget(QWidget):
         self.drag_start = None
         self.drag_end = None
         self.batte_spawn_position = None
-        self.reset_batte = None
-
+        self.reset_batte = False
         self.init_simulation()
 
     def init_simulation(self):
@@ -46,12 +49,12 @@ class PymunkSimulationWidget(QWidget):
         ground_y = 50
         ground = pymunk.Segment(
             self.space.static_body,
-            (0, ground_y),
-            (self.W, ground_y),
+            (-10000, ground_y),
+            (10000, ground_y),
             2
         )
-        ground.elasticity = 0.2
-        ground.friction = 1.0
+        ground.elasticity = 0.5
+        ground.friction = 1
         ground.collision_type = 2
         self.space.add(ground)
 
@@ -100,6 +103,16 @@ class PymunkSimulationWidget(QWidget):
         elif self.batte.velocity.x < 0:
             self.reset_batte = True
 
+        ground_y = 50
+        rebound_threshold = 5
+        if self.ball.position.y - self.radius <= ground_y + rebound_threshold:
+            vx, vy = self.ball.velocity
+            self.ball.velocity = vx * 0.9, vy
+
+
+        if self.ball.velocity.x < 10000000:
+            self.positionChanged.emit(self.ball.position.x, self.ball.position.y - 50)
+
         self.space.step(dt)
         self.update()
 
@@ -145,11 +158,11 @@ class PymunkSimulationWidget(QWidget):
 
     def lancer(self, speed, spin):
         self.batte.position = (-1000, -1000)
-        self.ball.position = (750, 200)
+        self.ball.position = (750, 150)
         self.ball.velocity = (0, 0)
         self.ball.angular_velocity = 0
         self.ball.angle = 0
-        angle = -0.43
+        angle = -0.25
 
         velocity_x = -speed*10 * math.cos(angle)
         velocity_y = -speed*10 * math.sin(angle)
@@ -186,7 +199,7 @@ class PymunkSimulationWidget(QWidget):
                     p.drawPixmap(-self.radius, -self.radius, 2 * self.radius, 2 * self.radius, self.ball_image)
 
             else:
-                p.setBrush(Qt.GlobalColor.darkYellow)
+                p.setBrush(QColor(160, 82, 45))
                 p.drawEllipse(-self.radius,-self.radius,2 * self.radius, 2 * self.radius
                 )
 
@@ -201,4 +214,7 @@ class PymunkSimulationWidget(QWidget):
         if self.paused:
             self.timer.start(16)
             self.paused = False
+
+    def set_controller(self, controller):
+        self.__controller = controller
 
