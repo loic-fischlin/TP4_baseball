@@ -5,7 +5,6 @@ from PyQt6.QtGui import QAction
 from PyQt6.QtWidgets import QMainWindow, QHBoxLayout, QDoubleSpinBox, QPushButton, QVBoxLayout, QMessageBox
 from PyQt6.uic import loadUi
 
-from view.graph_view import GraphCanvas
 from view.physique_view import PymunkSimulationWidget
 
 if TYPE_CHECKING:
