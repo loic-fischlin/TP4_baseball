@@ -44,7 +44,7 @@ class MainController:
         self.__canva.set_lim(-200, 850, 0, 300)
 
     def expend_graph(self):
-        self.__canva.set_lim(1000, 10000, 0, 4000)
+        self.__canva.set_lim(0, 10000, 0, 4000)
 
 
 

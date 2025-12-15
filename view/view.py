@@ -59,8 +59,8 @@ class MainWindow(QMainWindow):
             "Speed : vitesse de la balle en pixels entre 0 et 150 (facteur ×10)\n\n"
             "Pour frapper la balle, il faut faire un clic gauche dans la partie en bas à gauche, "
             "garder le bouton enfoncé, puis déplacer la souris. "
-            "Cela crée une balle dont la vitesse et la direction sont proportionnelles au déplacement de la souris."
-            " Pour changer la dimension du graphique, appuyez sur Graph size en haut à gauche de la page"
+            "Cela crée une balle dont la vitesse et la direction sont proportionnelles au déplacement de la souris.\n"
+            "Pour changer la dimension du graphique il faut appuyer sur Graph size en haut à gauche de la page."
         )
 
     def update_small_size(self):
