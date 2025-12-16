@@ -37,6 +37,7 @@ class MainWindow(QMainWindow):
 
         self.spinBox_spin.setRange(-20,20)
         self.spinBox_speed.setRange(0,150)
+        self.resume_button.setEnabled(False)
 
         #barre de contrôle
         self.spinBox_speed.valueChanged.connect(self.speed_changed)
@@ -88,9 +89,13 @@ class MainWindow(QMainWindow):
 
     def pause(self):
         self.__controller.pause()
+        self.resume_button.setEnabled(True)
+        self.pause_button.setEnabled(False)
 
     def resume(self):
         self.__controller.resume()
+        self.resume_button.setEnabled(False)
+        self.pause_button.setEnabled(True)
 
     def add_canvas(self, canvas):
         self.grapheLayout.addWidget(canvas)
@@ -100,6 +105,7 @@ class MainWindow(QMainWindow):
 
     def set_canvas(self, canvas):
         self.grapheLayout.addWidget(canvas)
+
 
 
 
